@@ -1,0 +1,12 @@
+# Archivos de entorno e IDE
+.idea/
+*.iml
+.mvn/wrapper/maven-wrapper.jar
+
+# Archivos compilados
+**/target/
+*.class
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
