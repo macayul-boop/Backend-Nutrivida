@@ -1,0 +1,27 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  application:
+    name: servicio-usuario
+
+
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+    h2:
+      console:
+        # Habilita la consola web en http://localhost:8080/h2-console
+        enabled: true
+
+    jpa:
+      # Desactiva la generación automática de Hibernate para que Flyway controle la base de datos
+      hibernate:
+        ddl-auto: none
+
+    flyway:
+      # Habilita las migraciones de Flyway
+      enabled: true
