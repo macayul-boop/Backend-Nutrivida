@@ -1,6 +1,6 @@
 CREATE TABLE usuarios(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    rut VARCHAR(40) NOT NULL,
+    rut VARCHAR(40) UNIQUE NOT NULL,
     nombre VARCHAR(60) NOT NULL,
     apellidos VARCHAR(60) NOT NULL,
     telefono VARCHAR(20),
@@ -20,4 +20,5 @@ CREATE TABLE horario_nutricionista(
     CONSTRAINT fk_horario_nutricionista
             FOREIGN KEY (id_usuario)
             REFERENCES usuarios(id)
+            ON DELETE CASCADE 
 );
