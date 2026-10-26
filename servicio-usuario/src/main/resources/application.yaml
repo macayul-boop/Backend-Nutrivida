@@ -25,3 +25,4 @@ spring:
     flyway:
       # Habilita las migraciones de Flyway
       enabled: true
+

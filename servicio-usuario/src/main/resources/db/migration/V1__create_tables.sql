@@ -20,5 +20,5 @@ CREATE TABLE horario_nutricionista(
     CONSTRAINT fk_horario_nutricionista
             FOREIGN KEY (id_usuario)
             REFERENCES usuarios(id)
-            ON DELETE CASCADE 
+            ON DELETE CASCADE
 );

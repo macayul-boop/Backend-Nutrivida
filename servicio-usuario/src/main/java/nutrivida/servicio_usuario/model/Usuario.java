@@ -47,6 +47,6 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HorarioNutricionista> horarioNutricionista = new ArrayList<>();
 }
