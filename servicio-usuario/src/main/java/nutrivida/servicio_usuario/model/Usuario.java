@@ -49,4 +49,16 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HorarioNutricionista> horarioNutricionista = new ArrayList<>();
+
+    public void setHorarios(List<HorarioNutricionista> nuevosHorarios) {
+        this.horarioNutricionista.clear();
+        if (nuevosHorarios != null) {
+            nuevosHorarios.forEach(this::addHorario);
+        }
+    }
+
+    public void addHorario(HorarioNutricionista horario) {
+        this.horarioNutricionista.add(horario);
+        horario.setUsuario(this);
+    }
 }

@@ -1,8 +1,12 @@
 package nutrivida.servicio_usuario.dto;
 
-import lombok.Builder;
+import lombok.*;
 import nutrivida.servicio_usuario.model.Rol;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UsuarioPrueba {
     private Integer id;
