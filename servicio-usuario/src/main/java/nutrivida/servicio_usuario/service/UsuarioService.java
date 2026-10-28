@@ -2,6 +2,7 @@ package nutrivida.servicio_usuario.service;
 
 import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_usuario.dto.*;
+import nutrivida.servicio_usuario.exception.NotFoundException;
 import nutrivida.servicio_usuario.model.HorarioNutricionista;
 import nutrivida.servicio_usuario.model.Rol;
 import nutrivida.servicio_usuario.model.Usuario;
@@ -18,6 +19,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
 
+    // CREAR UN CLIENTE
     public UsuarioPrueba crearCliente(UsuarioRequest request){
 
         Usuario usuario = Usuario.builder()
@@ -42,6 +44,7 @@ public class UsuarioService {
                 .build();
     }
 
+    // CREAR UN EMPLEADO
     public UsuarioPrueba crearEmpleado(UsuarioRequest request){
 
         Usuario usuario = Usuario.builder()
@@ -80,6 +83,64 @@ public class UsuarioService {
 
     }
 
+    // EDITAR UN EMPLEADO
+    public EmpleadoResponse editarEmpleado(Integer idEmpleado, UsuarioRequest request){
+
+        Usuario usuario = usuarioRepository.findById(idEmpleado)
+                .orElseThrow(() -> new NotFoundException("El usuario no existe"));
+
+        usuario.setRut(request.getRut());
+        usuario.setNombre(request.getNombre());
+        usuario.setApellidos(request.getApellidos());
+        usuario.setTelefono(request.getTelefono());
+        usuario.setEmail(request.getEmail());
+        usuario.setContrasena(request.getContrasena());
+        usuario.setRol(request.getRol());
+        usuario.setEstado(request.getEstado());
+
+        if (request.getRol() == Rol.NUTRICIONISTA) {
+
+            List<HorarioNutricionista> nuevosHorarios = request.getHorarioNutricionista().stream()
+                    .map(hDto -> HorarioNutricionista.builder()
+                            .diaSemana(hDto.getDiaSemana())
+                            .horaEntrada(hDto.getHoraEntrada())
+                            .horaSalida(hDto.getHoraSalida())
+                            .build())
+                    .toList();
+
+            usuario.setHorarios(nuevosHorarios);
+
+        } else {
+            usuario.getHorarioNutricionista().clear();
+        }
+
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+        List<HorarioNutricionistaResponse> horario = usuarioGuardado.getHorarioNutricionista().stream()
+                .map(h -> HorarioNutricionistaResponse.builder()
+                        .id(h.getId())
+                        .diaSemana(h.getDiaSemana())
+                        .horaEntrada(h.getHoraEntrada())
+                        .horaSalida(h.getHoraSalida())
+                        .build())
+                .toList();
+
+        List<HorarioNutricionistaResponse> horarioVerdadero = horario.isEmpty() ? null : horario;
+
+        return EmpleadoResponse.builder()
+                .id(usuarioGuardado.getId())
+                .rut(usuarioGuardado.getRut())
+                .nombre(usuarioGuardado.getNombre())
+                .apellidos(usuarioGuardado.getApellidos())
+                .telefono(usuarioGuardado.getTelefono())
+                .email(usuarioGuardado.getEmail())
+                .contrasena(usuarioGuardado.getContrasena())
+                .rol(usuarioGuardado.getRol())
+                .estado(usuarioGuardado.getEstado())
+                .horarioNutricionista(horarioVerdadero)
+                .build();
+    }
+
     public List<UsuarioPrueba> leerUsuarios(){
         List<Usuario> list = usuarioRepository.findAll();
 
@@ -93,6 +154,7 @@ public class UsuarioService {
 
     }
 
+    // Leer todos los empleados nutricionista y secretario
     public List<EmpleadoResponse> listarEmpleados(){
         List<Rol> rolesBuscados = List.of(Rol.NUTRICIONISTA, Rol.SECRETARIO);
         List<Usuario> usuarios = usuarioRepository.findByRolIn(rolesBuscados);

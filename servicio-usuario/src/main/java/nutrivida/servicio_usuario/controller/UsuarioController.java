@@ -44,6 +44,11 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/usuarios/empleados/{idEmpleado}")
+    public ResponseEntity<EmpleadoResponse> editarEmpleado(@Valid @RequestBody UsuarioRequest request, @PathVariable Integer idEmpleado){
+        EmpleadoResponse response = usuarioService.editarEmpleado(idEmpleado, request);
+        return ResponseEntity.ok(response);
+    }
 
 
 }
