@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_usuario.dto.EmpleadoResponse;
 import nutrivida.servicio_usuario.dto.UsuarioPrueba;
 import nutrivida.servicio_usuario.dto.UsuarioRequest;
-import nutrivida.servicio_usuario.model.Rol;
 import nutrivida.servicio_usuario.service.UsuarioService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +48,12 @@ public class UsuarioController {
     public ResponseEntity<EmpleadoResponse> editarEmpleado(@Valid @RequestBody UsuarioRequest request, @PathVariable Integer idEmpleado){
         EmpleadoResponse response = usuarioService.editarEmpleado(idEmpleado, request);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/usuarios/{idUsuario}")
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable Integer idUsuario){
+        usuarioService.eliminarUsuario(idUsuario);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 

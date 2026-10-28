@@ -186,5 +186,11 @@ public class UsuarioService {
                 .toList();
     }
 
+    public void eliminarUsuario(Integer idEmpleado){
+        if(!usuarioRepository.existsById(idEmpleado)){
+            throw new NotFoundException("El usuario no existe");
+        }
+        usuarioRepository.deleteById(idEmpleado);
+    }
 
 }
