@@ -2,11 +2,13 @@ package nutrivida.servicio_usuario.service;
 
 import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_usuario.dto.*;
+import nutrivida.servicio_usuario.exception.ConflictoException;
 import nutrivida.servicio_usuario.exception.NotFoundException;
 import nutrivida.servicio_usuario.model.HorarioNutricionista;
 import nutrivida.servicio_usuario.model.Rol;
 import nutrivida.servicio_usuario.model.Usuario;
 import nutrivida.servicio_usuario.repository.UsuarioRepository;
+import nutrivida.servicio_usuario.security.JwtService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,10 +19,26 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final JwtService jwtService;
+
+    // LOGIN
+    public TokenResponse login(LoginRequest request){
+        Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ConflictoException("Usuario no encontrado"));
+
+        if(!usuario.getContrasena().equals(request.getContrasena())){
+            String mensaje = "Contraseña incorrecta" + usuario.getContrasena();
+            throw new RuntimeException(mensaje);
+        }
+
+        String token = jwtService.generateToken(usuario.getEmail(), usuario.getRol().toString(), usuario.getId());
+        return TokenResponse.builder().token(token).build();
+
+    }
 
 
     // CREAR UN CLIENTE
-    public UsuarioPrueba crearCliente(UsuarioRequest request){
+    public TokenResponse crearCliente(UsuarioRequest request){
 
         Usuario usuario = Usuario.builder()
                 .rut(request.getRut())
@@ -37,15 +55,13 @@ public class UsuarioService {
 
         Usuario usuarioGuardado = usuarioRepository.save(usuario);
 
-        return UsuarioPrueba.builder()
-                .id(usuarioGuardado.getId())
-                .nombre(usuarioGuardado.getNombre())
-                .rol(usuarioGuardado.getRol())
-                .build();
+        String token = jwtService.generateToken(usuarioGuardado.getEmail(), usuarioGuardado.getRol().toString(), usuarioGuardado.getId());
+
+        return TokenResponse.builder().token(token).build();
     }
 
     // CREAR UN EMPLEADO
-    public UsuarioPrueba crearEmpleado(UsuarioRequest request){
+    public EmpleadoResponse crearEmpleado(UsuarioRequest request){
 
         Usuario usuario = Usuario.builder()
                 .rut(request.getRut())
@@ -75,10 +91,28 @@ public class UsuarioService {
 
         Usuario usuarioGuardado = usuarioRepository.save(usuario);
 
-        return UsuarioPrueba.builder()
+        List<HorarioNutricionistaResponse> horario = usuarioGuardado.getHorarioNutricionista().stream()
+                .map(h -> HorarioNutricionistaResponse.builder()
+                        .id(h.getId())
+                        .diaSemana(h.getDiaSemana())
+                        .horaEntrada(h.getHoraEntrada())
+                        .horaSalida(h.getHoraSalida())
+                        .build())
+                .toList();
+
+        List<HorarioNutricionistaResponse> horarioVerdadero = horario.isEmpty() ? null : horario;
+
+        return EmpleadoResponse.builder()
                 .id(usuarioGuardado.getId())
+                .rut(usuarioGuardado.getRut())
                 .nombre(usuarioGuardado.getNombre())
+                .apellidos(usuarioGuardado.getApellidos())
+                .telefono(usuarioGuardado.getTelefono())
+                .email(usuarioGuardado.getEmail())
+                .contrasena(usuarioGuardado.getContrasena())
                 .rol(usuarioGuardado.getRol())
+                .estado(usuarioGuardado.getEstado())
+                .horarioNutricionista(horarioVerdadero)
                 .build();
 
     }

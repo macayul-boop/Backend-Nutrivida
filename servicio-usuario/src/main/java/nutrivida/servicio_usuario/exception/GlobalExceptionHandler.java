@@ -49,6 +49,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(ConflictoException.class)
+    public ResponseEntity<ErrorResponse> conflicto(ConflictoException ex, HttpServletRequest request){
+        ErrorResponse error = ErrorResponse.builder()
+                .fecha(LocalDateTime.now())
+                .estado(HttpStatus.CONFLICT.value())
+                .mensaje(ex.getMessage())
+                .ruta(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
 
 
 }

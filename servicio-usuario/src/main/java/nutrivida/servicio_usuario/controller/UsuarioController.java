@@ -2,9 +2,7 @@ package nutrivida.servicio_usuario.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import nutrivida.servicio_usuario.dto.EmpleadoResponse;
-import nutrivida.servicio_usuario.dto.UsuarioPrueba;
-import nutrivida.servicio_usuario.dto.UsuarioRequest;
+import nutrivida.servicio_usuario.dto.*;
 import nutrivida.servicio_usuario.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,17 +29,22 @@ public class UsuarioController {
         return ResponseEntity.ok(lista);
     }
 
+    @PostMapping("/auth/register")
+    public ResponseEntity<TokenResponse> craerCliente(@Valid @RequestBody UsuarioRequest request){
+        TokenResponse response = usuarioService.crearCliente(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
-    @PostMapping("/usuarios/clientes")
-    public ResponseEntity<UsuarioPrueba> craerCliente(@Valid @RequestBody UsuarioRequest request){
-        UsuarioPrueba response = usuarioService.crearCliente(request);
+    @PostMapping("/auth/login")
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request){
+        TokenResponse response = usuarioService.login(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/usuarios/empleados")
-    public ResponseEntity<UsuarioPrueba> crearEmpleado(@Valid @RequestBody UsuarioRequest request){
-        UsuarioPrueba response = usuarioService.crearEmpleado(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<EmpleadoResponse> crearEmpleado(@Valid @RequestBody UsuarioRequest request){
+        EmpleadoResponse response = usuarioService.crearEmpleado(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/usuarios/empleados/{idEmpleado}")
