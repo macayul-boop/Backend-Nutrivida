@@ -3,6 +3,7 @@ package nutrivida.servicio_reserva.service;
 import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_reserva.dto.ServicioRequest;
 import nutrivida.servicio_reserva.dto.ServicioResponse;
+import nutrivida.servicio_reserva.exception.NotFoundException;
 import nutrivida.servicio_reserva.model.Servicio;
 import nutrivida.servicio_reserva.repository.ServicioRepository;
 import org.springframework.stereotype.Service;
@@ -37,8 +38,38 @@ public class ServicioService {
     }
 
     // EDITAR SERVICIO
+    public ServicioResponse editarServicio(Integer idServicio ,ServicioRequest request){
+
+        Servicio servicio = servicioRepository.findById(idServicio)
+                .orElseThrow(()-> new NotFoundException("Servicio no encontrado"));
+
+        servicio.setNombre(request.getNombre());
+        servicio.setDescripcion(request.getDescripcion());
+        servicio.setPrecio(request.getPrecio());
+        servicio.setDuracionMinutos(request.getDuracionMinutos());
+        servicio.setModalidad(request.getModalidad());
+
+        Servicio servicioGuardado = servicioRepository.save(servicio);
+
+        return ServicioResponse.builder()
+                .id(servicioGuardado.getId())
+                .nombre(servicioGuardado.getDescripcion())
+                .descripcion(servicioGuardado.getDescripcion())
+                .precio(servicioGuardado.getPrecio())
+                .duracionMinutos(servicioGuardado.getDuracionMinutos())
+                .modalidad(servicioGuardado.getModalidad())
+                .build();
+
+    }
 
     // ELIMINAR SERVICIO
+    public void eliminarServicio(Integer idServicio){
+        if(!servicioRepository.existsById(idServicio)){
+            throw new NotFoundException("Servicio no encontrado");
+        }
+        servicioRepository.deleteById(idServicio);
+    }
+
 
     // LEER UN SERVICIO
 

@@ -1,6 +1,7 @@
 package nutrivida.servicio_reserva.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import nutrivida.servicio_reserva.dto.ErrorResponse;
 import nutrivida.servicio_reserva.dto.ErrorValidResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,19 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    // Exception de NotFound
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> notFound(NotFoundException ex, HttpServletRequest request){
+        ErrorResponse error = ErrorResponse.builder()
+                .fecha(LocalDateTime.now())
+                .estado(HttpStatus.NOT_FOUND.value())
+                .mensaje(ex.getMessage())
+                .ruta(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
 }
