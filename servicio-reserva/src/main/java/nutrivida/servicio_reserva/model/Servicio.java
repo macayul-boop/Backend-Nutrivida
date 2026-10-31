@@ -34,6 +34,7 @@ public class Servicio {
     private Integer duracionMinutos;
 
     @Column(name = "modalidad", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Modalidad modalidad;
 
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -33,6 +33,7 @@ public class Reserva {
     private Servicio servicio;
 
     @Column(name = "estado")
+    @Enumerated(EnumType.STRING)
     private EstadoReserva estado;
 
     @Column(name = "fecha")
