@@ -23,10 +23,28 @@ public class UsuarioController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/usuarios/clienteSimplificado")
+    public ResponseEntity<List<ClienteSimplificadoResponse>> leerTodosClientesSimplificado(){
+        List<ClienteSimplificadoResponse> lista = usuarioService.leerTodosClienteSimplificado();
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/usuarios/nutricionistaSimplificado")
+    public ResponseEntity<List<NutricionistaSimplificadoResponse>> leerTodosNutricionistaSimplificado(){
+        List<NutricionistaSimplificadoResponse> lista = usuarioService.listarTodosNutricionistaSimplificado();
+        return ResponseEntity.ok(lista);
+    }
+
     @GetMapping("/usuarios/empleados")
     public ResponseEntity<List<EmpleadoResponse>> listarEmpleados(){
         List<EmpleadoResponse> lista = usuarioService.listarEmpleados();
         return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/usuarios/verificar/{idUsuario}")
+    public ResponseEntity<Boolean> verificarUsuario(@PathVariable Integer idUsuario){
+        Boolean response = usuarioService.verificarUsuario(idUsuario);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/auth/register")

@@ -30,3 +30,6 @@ spring:
       # Habilita las migraciones de Flyway
       enabled: true
 
+  springdoc:
+    swagger-ui:
+      path: /swagger-ui.html

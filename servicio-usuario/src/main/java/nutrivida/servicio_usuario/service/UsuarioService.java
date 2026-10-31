@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_usuario.dto.*;
 import nutrivida.servicio_usuario.exception.ConflictoException;
 import nutrivida.servicio_usuario.exception.NotFoundException;
+import nutrivida.servicio_usuario.model.Estado;
 import nutrivida.servicio_usuario.model.HorarioNutricionista;
 import nutrivida.servicio_usuario.model.Rol;
 import nutrivida.servicio_usuario.model.Usuario;
@@ -20,6 +21,43 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
+
+    // OBTENER INFORMACION SIMPLIFICADA DE CLIENTE
+    public List<ClienteSimplificadoResponse> leerTodosClienteSimplificado(){
+        List<Usuario> usuarios = usuarioRepository.findByRolIn(List.of(Rol.CLIENTE));
+
+        return usuarios.stream()
+                .map(usuario -> ClienteSimplificadoResponse.builder()
+                        .id(usuario.getId())
+                        .nombre(usuario.getNombre())
+                        .build()
+
+                ).toList();
+    }
+
+    // OBTENER INFORMACION SIMPLIFICADA DE NUTRCICIONISTA
+    public List<NutricionistaSimplificadoResponse> listarTodosNutricionistaSimplificado(){
+        List<Usuario> usuarios = usuarioRepository.findByRolAndEstado(Rol.NUTRICIONISTA, Estado.HABILITADO);
+
+        return usuarios.stream()
+                .map(usuario -> NutricionistaSimplificadoResponse.builder()
+                        .id(usuario.getId())
+                        .nombre(usuario.getNombre())
+                        .horarioNutricionista(
+                                usuario.getHorarioNutricionista().stream()
+                                        .map(h -> HorarioNutricionistaResponse.builder()
+                                                .id(h.getId())
+                                                .diaSemana(h.getDiaSemana())
+                                                .horaEntrada(h.getHoraEntrada())
+                                                .horaSalida(h.getHoraSalida())
+                                                .build())
+                                        .toList()
+                        )
+                        .build()
+                ).toList();
+    }
+
+
 
     // LOGIN
     public TokenResponse login(LoginRequest request){
@@ -220,11 +258,21 @@ public class UsuarioService {
                 .toList();
     }
 
+
+    // ELIMINAR UN USUARIO
     public void eliminarUsuario(Integer idEmpleado){
         if(!usuarioRepository.existsById(idEmpleado)){
             throw new NotFoundException("El usuario no existe");
         }
         usuarioRepository.deleteById(idEmpleado);
+    }
+
+    // VERIFICAR SI EXISTE ALGUN USUARIO
+    public Boolean verificarUsuario(Integer idUsuario){
+        if(usuarioRepository.existsById(idUsuario)){
+            return true;
+        }
+        return false;
     }
 
 }
