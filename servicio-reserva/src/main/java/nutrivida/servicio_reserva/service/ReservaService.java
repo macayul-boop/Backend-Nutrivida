@@ -2,6 +2,8 @@ package nutrivida.servicio_reserva.service;
 
 import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_reserva.WebClient.UsuarioCliente;
+import nutrivida.servicio_reserva.dto.ClienteSimplificadoDto;
+import nutrivida.servicio_reserva.dto.NutricionistaSimplificadoDto;
 import nutrivida.servicio_reserva.dto.ReservaRequest;
 import nutrivida.servicio_reserva.dto.ReservaResponse;
 import nutrivida.servicio_reserva.exception.ConflictoException;
@@ -62,6 +64,9 @@ public class ReservaService {
 
         Reserva reservaGuardada = reservaRespository.save(reserva);
 
+        ClienteSimplificadoDto cliente = usuarioCliente.leerUnClienteSimplificado(reservaGuardada.getIdCliente());
+        NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(reservaGuardada.getIdNutricionista());
+
         return ReservaResponse.builder()
                 .id(reservaGuardada.getId())
                 .idNutricionista(reservaGuardada.getIdNutricionista())
@@ -71,8 +76,10 @@ public class ReservaService {
                 .fecha(reservaGuardada.getFecha())
                 .horaInicio(reservaGuardada.getHoraInicio())
                 .horaTermino(reservaGuardada.getHoraTermino())
+                .datosClientes(cliente)
+                .datosNutricionista(nutricionista)
+                .nombreServicio(reservaGuardada.getServicio().getNombre())
                 .build();
-
     }
 
     // EDITAR UNA RESERVA

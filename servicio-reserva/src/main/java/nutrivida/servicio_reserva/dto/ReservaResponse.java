@@ -18,6 +18,9 @@ public class ReservaResponse {
     private LocalDate fecha;
     private LocalTime horaInicio;
     private LocalTime horaTermino;
+    private ClienteSimplificadoDto datosClientes;
+    private NutricionistaSimplificadoDto datosNutricionista;
+    private String nombreServicio;
 
     // Agregar infromacion del servicio, nutricionista y cliente
 }
