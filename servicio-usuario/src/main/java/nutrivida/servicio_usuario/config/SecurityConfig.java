@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/clienteSimplificado").hasAuthority("SECRETARIO")
                         .requestMatchers("/api/usuarios/nutricionistaSimplificado").hasAnyAuthority("SECRETARIO")
                         .requestMatchers("/api/usuarios/empleados/**").hasAnyAuthority("ADMINISTRADOR")
-                        .requestMatchers("/api/usuarios/verificar/").hasAnyAuthority("SECRETARIO", "NUTRICIONISTA")
+                        .requestMatchers("/api/usuarios/verificar/").hasAnyAuthority("SECRETARIO", "NUTRICIONISTA", "CLIENTE")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

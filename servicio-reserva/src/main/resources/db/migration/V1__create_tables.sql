@@ -15,6 +15,7 @@ CREATE TABLE reservas(
     estado VARCHAR(40) NOT NULL,
     fecha DATE NOT NULL,
     hora_inicio TIME  NOT NULL,
+    hora_termino TIME NOT NULL,
 
     CONSTRAINT fk_reserva_servicio
             FOREIGN KEY (id_servicio)

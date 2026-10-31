@@ -42,4 +42,7 @@ public class Reserva {
     @Column(name = "hora_inicio")
     private LocalTime horaInicio;
 
+    @Column(name = "hora_termino")
+    private LocalTime horaTermino;
+
 }
