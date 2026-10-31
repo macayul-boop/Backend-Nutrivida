@@ -29,10 +29,22 @@ public class UsuarioController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/usuarios/clienteSimplificado/{idCliente}")
+    public ResponseEntity<ClienteSimplificadoResponse> leerUnClienteSImplificado(@PathVariable Integer idCliente){
+        ClienteSimplificadoResponse response = usuarioService.leerUnClienteSimplificado(idCliente);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/usuarios/nutricionistaSimplificado")
     public ResponseEntity<List<NutricionistaSimplificadoResponse>> leerTodosNutricionistaSimplificado(){
         List<NutricionistaSimplificadoResponse> lista = usuarioService.listarTodosNutricionistaSimplificado();
         return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/usuarios/nutricionistaSimplificado/{idNutricionista}")
+    public ResponseEntity<NutricionistaSimplificadoResponse> leerUnNutricionistaSimplificado(@PathVariable Integer idNutricionista){
+        NutricionistaSimplificadoResponse response = usuarioService.leerUnNutricionistaSimplificado(idNutricionista);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/usuarios/empleados")

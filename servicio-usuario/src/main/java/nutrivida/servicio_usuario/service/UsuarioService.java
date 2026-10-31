@@ -22,7 +22,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
 
-    // OBTENER INFORMACION SIMPLIFICADA DE CLIENTE
+    // OBTENER INFORMACION SIMPLIFICADA DE LOS CLIENTE
     public List<ClienteSimplificadoResponse> leerTodosClienteSimplificado(){
         List<Usuario> usuarios = usuarioRepository.findByRolIn(List.of(Rol.CLIENTE));
 
@@ -30,9 +30,43 @@ public class UsuarioService {
                 .map(usuario -> ClienteSimplificadoResponse.builder()
                         .id(usuario.getId())
                         .nombre(usuario.getNombre())
+                        .rutCliente(usuario.getRut())
                         .build()
 
                 ).toList();
+    }
+
+    // OBTENER INFORMACION SIMPLIFICADA DE UN CLIENTE
+    public ClienteSimplificadoResponse leerUnClienteSimplificado(Integer idCliente){
+        Usuario usuario = usuarioRepository.findById(idCliente)
+                .orElseThrow(()-> new NotFoundException("Cliente no encontrado"));
+
+        return ClienteSimplificadoResponse.builder()
+                .id(usuario.getId())
+                .nombre(usuario.getNombre())
+                .rutCliente(usuario.getRut())
+                .build();
+    }
+
+    // OBTENER INFORMACION SIMPLIFICADA DE UN EMPLEADO
+    public NutricionistaSimplificadoResponse leerUnNutricionistaSimplificado(Integer idNutricionista){
+        Usuario usuario = usuarioRepository.findById(idNutricionista)
+                .orElseThrow(()-> new NotFoundException("Nutricionista no encontrado"));
+
+        return NutricionistaSimplificadoResponse.builder()
+                .id(usuario.getId())
+                .nombre(usuario.getNombre())
+                .horarioNutricionista(
+                        usuario.getHorarioNutricionista().stream()
+                                .map(h -> HorarioNutricionistaResponse.builder()
+                                        .id(h.getId())
+                                        .diaSemana(h.getDiaSemana())
+                                        .horaEntrada(h.getHoraEntrada())
+                                        .horaSalida(h.getHoraSalida())
+                                        .build())
+                                .toList()
+                )
+                .build();
     }
 
     // OBTENER INFORMACION SIMPLIFICADA DE NUTRCICIONISTA
