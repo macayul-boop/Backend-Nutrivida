@@ -18,6 +18,7 @@
 
   <modules>
     <module>servicio-usuario</module>
+    <module>servicio-reserva</module>
   </modules>
 
   <properties>
