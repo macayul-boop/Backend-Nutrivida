@@ -33,7 +33,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/api/servicios").hasAuthority("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.DELETE,"/api/servicios").hasAuthority("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.GET,"/api/servicios").permitAll()
-                        .requestMatchers("/api/reservas").hasAnyAuthority("CLIENTE", "SECRETARIO")
+                        .requestMatchers(HttpMethod.PUT,"/api/reservas/secretarios/").hasAuthority("SECRETARIO")
+                        .requestMatchers("/api/reservas/**").hasAnyAuthority("CLIENTE", "SECRETARIO")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

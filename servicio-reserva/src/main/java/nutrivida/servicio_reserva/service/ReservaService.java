@@ -2,10 +2,7 @@ package nutrivida.servicio_reserva.service;
 
 import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_reserva.WebClient.UsuarioCliente;
-import nutrivida.servicio_reserva.dto.ClienteSimplificadoDto;
-import nutrivida.servicio_reserva.dto.NutricionistaSimplificadoDto;
-import nutrivida.servicio_reserva.dto.ReservaRequest;
-import nutrivida.servicio_reserva.dto.ReservaResponse;
+import nutrivida.servicio_reserva.dto.*;
 import nutrivida.servicio_reserva.exception.ConflictoException;
 import nutrivida.servicio_reserva.exception.NotFoundException;
 import nutrivida.servicio_reserva.model.EstadoReserva;
@@ -82,7 +79,49 @@ public class ReservaService {
                 .build();
     }
 
-    // EDITAR UNA RESERVA
+    // EDITAR UNA RESERVA COMO SECRETARIO
+    public ReservaResponse editarReservaSecretario(Integer idReserva, EditarReservaDto dtoRequest){
+        Reserva reserva = reservaRespository.findById(idReserva)
+                .orElseThrow(()-> new NotFoundException("Reserva no encontrada"));
+
+        LocalTime horaTermino = dtoRequest.getHoraInicio().plusMinutes(reserva.getServicio().getDuracionMinutos());
+
+        Boolean reservaInvalida = reservaRespository.existeSolapamiento(
+                reserva.getIdNutricionista(),
+                dtoRequest.getFecha(),
+                dtoRequest.getHoraInicio(),
+                horaTermino
+        );
+
+        if(reservaInvalida){
+            throw new ConflictoException("La cita solapa a una reserva ya existente");
+        }
+
+        reserva.setFecha(dtoRequest.getFecha());
+        reserva.setHoraInicio(dtoRequest.getHoraInicio());
+        reserva.setHoraTermino(horaTermino);
+
+        Reserva reservaGuardada = reservaRespository.save(reserva);
+
+        ClienteSimplificadoDto cliente = usuarioCliente.leerUnClienteSimplificado(reservaGuardada.getIdCliente());
+        NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(reservaGuardada.getIdNutricionista());
+
+        return ReservaResponse.builder()
+                .id(reservaGuardada.getId())
+                .idNutricionista(reservaGuardada.getIdNutricionista())
+                .idCliente(reservaGuardada.getIdCliente())
+                .idServicio(reservaGuardada.getServicio().getId())
+                .estado(reservaGuardada.getEstado())
+                .fecha(reservaGuardada.getFecha())
+                .horaInicio(reservaGuardada.getHoraInicio())
+                .horaTermino(reservaGuardada.getHoraTermino())
+                .datosClientes(cliente)
+                .datosNutricionista(nutricionista)
+                .nombreServicio(reservaGuardada.getServicio().getNombre())
+                .build();
+    }
+
+    // EDITAR UNA RESERVA COMO CLIENTE
 
     // CANCELAR CITA
 

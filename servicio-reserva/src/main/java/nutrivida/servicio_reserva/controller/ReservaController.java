@@ -2,14 +2,12 @@ package nutrivida.servicio_reserva.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import nutrivida.servicio_reserva.dto.EditarReservaDto;
 import nutrivida.servicio_reserva.dto.ReservaRequest;
 import nutrivida.servicio_reserva.dto.ReservaResponse;
 import nutrivida.servicio_reserva.service.ReservaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -24,5 +22,15 @@ public class ReservaController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/reservas/secretarios/{idReserva}")
+    public ResponseEntity<ReservaResponse> editarReservaSecretario(
+            @PathVariable Integer idReserva,
+            @Valid @RequestBody EditarReservaDto dtoRequest
+    ){
+        ReservaResponse response = reservaService.editarReservaSecretario(idReserva, dtoRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    
 
 }
