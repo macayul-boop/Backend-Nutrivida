@@ -26,4 +26,6 @@ public interface ReservaRespository extends JpaRepository<Reserva, Integer> {
     );
 
     List<Reserva> findAllByIdCliente(Integer idCliente);
+
+    List<Reserva> findAllByIdNutricionistaAndFecha(Integer idNutricionista, LocalDate fecha);
 }

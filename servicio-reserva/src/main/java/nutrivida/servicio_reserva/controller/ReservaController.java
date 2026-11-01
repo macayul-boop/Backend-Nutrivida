@@ -6,10 +6,12 @@ import nutrivida.servicio_reserva.dto.EditarReservaDto;
 import nutrivida.servicio_reserva.dto.ReservaRequest;
 import nutrivida.servicio_reserva.dto.ReservaResponse;
 import nutrivida.servicio_reserva.service.ReservaService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -67,5 +69,13 @@ public class ReservaController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/reservas/nutricionista/{idNutricionista}")
+    public ResponseEntity<List<ReservaResponse>> listarTodasReservasDeUnNutricionista(
+            @PathVariable Integer idNutricionista,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
+    ){
+        List<ReservaResponse> response = reservaService.leerReservasPorFechaDeUnNutricionista(idNutricionista, fecha);
+        return ResponseEntity.ok(response);
+    }
 
 }

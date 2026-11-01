@@ -229,6 +229,32 @@ public class ReservaService {
 
 
     // LEER LAS RESERVAS DE UN NUTRICIONISTA
+    public List<ReservaResponse> leerReservasPorFechaDeUnNutricionista(Integer idNutricionista, LocalDate fecha){
+        List<Reserva> lista = reservaRespository.findAllByIdNutricionistaAndFecha(idNutricionista, fecha);
+
+        List<ReservaResponse> response = new ArrayList<>();
+
+        for(Reserva r : lista){
+            ClienteSimplificadoDto cliente = usuarioCliente.leerUnClienteSimplificado(r.getIdCliente());
+
+            ReservaResponse reservaTransformada = ReservaResponse.builder()
+                    .id(r.getId())
+                    .idNutricionista(r.getIdNutricionista())
+                    .idCliente(r.getIdCliente())
+                    .idServicio(r.getServicio().getId())
+                    .estado(r.getEstado())
+                    .fecha(r.getFecha())
+                    .horaInicio(r.getHoraInicio())
+                    .horaTermino(r.getHoraTermino())
+                    .datosClientes(cliente)
+                    .nombreServicio(r.getServicio().getNombre())
+                    .build();
+
+            response.add(reservaTransformada);
+        }
+
+        return response;
+    }
 
     // LEER LAS RESERVAS DE UN PACIENTE
     public List<ReservaResponse> leerTodasReservasDeUnPaciente(Integer idCliente){
