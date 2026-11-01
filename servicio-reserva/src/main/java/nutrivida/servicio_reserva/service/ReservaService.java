@@ -168,8 +168,63 @@ public class ReservaService {
     }
 
     // CANCELAR CITA COMO SECRETARIO
+    public ReservaResponse cancelarReservaSecretario(Integer idReserva){
+        Reserva reserva = reservaRespository.findById(idReserva)
+                .orElseThrow(()-> new NotFoundException("Reserva no encontrada"));
+
+        reserva.setEstado(EstadoReserva.CANCELADA);
+
+        Reserva reservaGuardada = reservaRespository.save(reserva);
+
+        ClienteSimplificadoDto cliente = usuarioCliente.leerUnClienteSimplificado(reservaGuardada.getIdCliente());
+        NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(reservaGuardada.getIdNutricionista());
+
+        return ReservaResponse.builder()
+                .id(reservaGuardada.getId())
+                .idNutricionista(reservaGuardada.getIdNutricionista())
+                .idCliente(reservaGuardada.getIdCliente())
+                .idServicio(reservaGuardada.getServicio().getId())
+                .estado(reservaGuardada.getEstado())
+                .fecha(reservaGuardada.getFecha())
+                .horaInicio(reservaGuardada.getHoraInicio())
+                .horaTermino(reservaGuardada.getHoraTermino())
+                .datosClientes(cliente)
+                .datosNutricionista(nutricionista)
+                .nombreServicio(reservaGuardada.getServicio().getNombre())
+                .build();
+    }
 
     // CANCELAR CITA COMO CLIENTE
+    public ReservaResponse cancelarReservaCliente(Integer idReserva, Integer idCliente){
+        Reserva reserva = reservaRespository.findById(idReserva)
+                .orElseThrow(()-> new NotFoundException("Reserva no encontrada"));
+
+        if(!reserva.getIdCliente().equals(idCliente)){
+            throw new ConflictoException("El recurso no te pertenece");
+        }
+
+        reserva.setEstado(EstadoReserva.CANCELADA);
+
+        Reserva reservaGuardada = reservaRespository.save(reserva);
+
+        ClienteSimplificadoDto cliente = usuarioCliente.leerUnClienteSimplificado(reservaGuardada.getIdCliente());
+        NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(reservaGuardada.getIdNutricionista());
+
+        return ReservaResponse.builder()
+                .id(reservaGuardada.getId())
+                .idNutricionista(reservaGuardada.getIdNutricionista())
+                .idCliente(reservaGuardada.getIdCliente())
+                .idServicio(reservaGuardada.getServicio().getId())
+                .estado(reservaGuardada.getEstado())
+                .fecha(reservaGuardada.getFecha())
+                .horaInicio(reservaGuardada.getHoraInicio())
+                .horaTermino(reservaGuardada.getHoraTermino())
+                .datosClientes(cliente)
+                .datosNutricionista(nutricionista)
+                .nombreServicio(reservaGuardada.getServicio().getNombre())
+                .build();
+    }
+
 
     // LEER LAS RESERVAS DE UN NUTRICIONISTA
 

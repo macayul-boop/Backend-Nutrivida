@@ -42,5 +42,20 @@ public class ReservaController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/reservas/secretarios/cancelar/{idReserva}")
+    public ResponseEntity<ReservaResponse> cancelarReservaSecretario(@PathVariable Integer idReserva){
+        ReservaResponse response = reservaService.cancelarReservaSecretario(idReserva);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/reservas/clientes/cancelar/{idReserva}")
+    public ResponseEntity<ReservaResponse> cancelarReservaCliente(
+            @PathVariable Integer idReserva,
+            @AuthenticationPrincipal Integer idCliente
+    ){
+        ReservaResponse response = reservaService.cancelarReservaCliente(idReserva, idCliente);
+        return ResponseEntity.ok(response);
+    }
+
 
 }
