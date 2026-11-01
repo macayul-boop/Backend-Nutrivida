@@ -122,8 +122,54 @@ public class ReservaService {
     }
 
     // EDITAR UNA RESERVA COMO CLIENTE
+    public ReservaResponse editarReservaCliente(Integer idReserva, Integer idCliente,EditarReservaDto dtoRequest){
+        Reserva reserva = reservaRespository.findById(idReserva)
+                .orElseThrow(()-> new NotFoundException("Reserva no encontrada"));
 
-    // CANCELAR CITA
+        if(!reserva.getIdCliente().equals(idCliente)){
+            throw new ConflictoException("El recurso no te pertenece");
+        }
+
+        LocalTime horaTermino = dtoRequest.getHoraInicio().plusMinutes(reserva.getServicio().getDuracionMinutos());
+
+        Boolean reservaInvalida = reservaRespository.existeSolapamiento(
+                reserva.getIdNutricionista(),
+                dtoRequest.getFecha(),
+                dtoRequest.getHoraInicio(),
+                horaTermino
+        );
+
+        if(reservaInvalida){
+            throw new ConflictoException("La cita solapa a una reserva ya existente");
+        }
+
+        reserva.setFecha(dtoRequest.getFecha());
+        reserva.setHoraInicio(dtoRequest.getHoraInicio());
+        reserva.setHoraTermino(horaTermino);
+
+        Reserva reservaGuardada = reservaRespository.save(reserva);
+
+        ClienteSimplificadoDto cliente = usuarioCliente.leerUnClienteSimplificado(reservaGuardada.getIdCliente());
+        NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(reservaGuardada.getIdNutricionista());
+
+        return ReservaResponse.builder()
+                .id(reservaGuardada.getId())
+                .idNutricionista(reservaGuardada.getIdNutricionista())
+                .idCliente(reservaGuardada.getIdCliente())
+                .idServicio(reservaGuardada.getServicio().getId())
+                .estado(reservaGuardada.getEstado())
+                .fecha(reservaGuardada.getFecha())
+                .horaInicio(reservaGuardada.getHoraInicio())
+                .horaTermino(reservaGuardada.getHoraTermino())
+                .datosClientes(cliente)
+                .datosNutricionista(nutricionista)
+                .nombreServicio(reservaGuardada.getServicio().getNombre())
+                .build();
+    }
+
+    // CANCELAR CITA COMO SECRETARIO
+
+    // CANCELAR CITA COMO CLIENTE
 
     // LEER LAS RESERVAS DE UN NUTRICIONISTA
 

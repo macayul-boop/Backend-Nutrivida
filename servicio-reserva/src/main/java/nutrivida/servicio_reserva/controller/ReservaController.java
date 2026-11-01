@@ -7,6 +7,7 @@ import nutrivida.servicio_reserva.dto.ReservaRequest;
 import nutrivida.servicio_reserva.dto.ReservaResponse;
 import nutrivida.servicio_reserva.service.ReservaService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,6 +32,15 @@ public class ReservaController {
         return ResponseEntity.ok(response);
     }
 
-    
+    @PutMapping("/reservas/clientes/{idReserva}")
+    public ResponseEntity<ReservaResponse> editarReservaCliente(
+            @PathVariable Integer idReserva,
+            @Valid @RequestBody EditarReservaDto dtoRequest,
+            @AuthenticationPrincipal Integer idCliente
+    ){
+        ReservaResponse response = reservaService.editarReservaCliente(idReserva,idCliente, dtoRequest);
+        return ResponseEntity.ok(response);
+    }
+
 
 }

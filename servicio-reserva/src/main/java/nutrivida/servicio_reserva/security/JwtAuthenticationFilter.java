@@ -43,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Validar firma y tiempo del token
         if (jwtService.isTokenValid(jwt)) {
             String email = jwtService.extractUsername(jwt);
+            Integer id = jwtService.extractId(jwt);
             List<String> roles = jwtService.extractRoles(jwt);
 
             // Convertimos la lista de Strings ["ROLE_USER"] en authorities de Spring
@@ -52,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Ficha de autenticación directa sin UserDetails
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    email,
+                    id,
                     null,
                     authorities
             );
