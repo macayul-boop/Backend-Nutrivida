@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/reservas").hasAnyAuthority("CLIENTE", "SECRETARIO")
                         .requestMatchers(HttpMethod.PUT, "/api/reservas/clientes/").hasAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.PATCH, "/api/reservas/clientes/canelar/").hasAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/api/reservas/clientes").hasAuthority("CLIENTE")
 
                         //.requestMatchers("/api/reservas/**").hasAnyAuthority("CLIENTE", "SECRETARIO")
                         .anyRequest().authenticated()

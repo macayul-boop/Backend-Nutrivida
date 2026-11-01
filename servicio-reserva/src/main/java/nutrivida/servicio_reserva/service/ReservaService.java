@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -229,6 +231,33 @@ public class ReservaService {
     // LEER LAS RESERVAS DE UN NUTRICIONISTA
 
     // LEER LAS RESERVAS DE UN PACIENTE
+    public List<ReservaResponse> leerTodasReservasDeUnPaciente(Integer idCliente){
+        List<Reserva> lista = reservaRespository.findAllByIdCliente(idCliente);
+
+        List<ReservaResponse> response = new ArrayList<>();
+
+        for(Reserva r : lista){
+            NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(r.getIdNutricionista());
+
+            ReservaResponse reservaTransformada = ReservaResponse.builder()
+                    .id(r.getId())
+                    .idNutricionista(r.getIdNutricionista())
+                    .idCliente(r.getIdCliente())
+                    .idServicio(r.getServicio().getId())
+                    .estado(r.getEstado())
+                    .fecha(r.getFecha())
+                    .horaInicio(r.getHoraInicio())
+                    .horaTermino(r.getHoraTermino())
+                    .datosNutricionista(nutricionista)
+                    .nombreServicio(r.getServicio().getNombre())
+                    .build();
+
+            response.add(reservaTransformada);
+        }
+
+        return response;
+    }
+
 
 
 }

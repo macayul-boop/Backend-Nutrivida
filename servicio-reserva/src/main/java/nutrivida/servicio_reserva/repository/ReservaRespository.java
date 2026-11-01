@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public interface ReservaRespository extends JpaRepository<Reserva, Integer> {
     @Query("""
@@ -23,4 +24,6 @@ public interface ReservaRespository extends JpaRepository<Reserva, Integer> {
             LocalTime horaInicio,
             LocalTime horaFin
     );
+
+    List<Reserva> findAllByIdCliente(Integer idCliente);
 }

@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -54,6 +56,14 @@ public class ReservaController {
             @AuthenticationPrincipal Integer idCliente
     ){
         ReservaResponse response = reservaService.cancelarReservaCliente(idReserva, idCliente);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/reservas/clientes")
+    public ResponseEntity<List<ReservaResponse>> listarTodasReservasDeUnClinte(
+            @AuthenticationPrincipal Integer idCliente
+    ){
+        List<ReservaResponse> response = reservaService.leerTodasReservasDeUnPaciente(idCliente);
         return ResponseEntity.ok(response);
     }
 
