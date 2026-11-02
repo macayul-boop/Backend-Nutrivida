@@ -1,6 +1,7 @@
 package nutrivida.servicio_usuario.service;
 
 import lombok.RequiredArgsConstructor;
+import nutrivida.servicio_usuario.WebClient.ReservaClient;
 import nutrivida.servicio_usuario.dto.*;
 import nutrivida.servicio_usuario.exception.ConflictoException;
 import nutrivida.servicio_usuario.exception.NotFoundException;
@@ -20,6 +21,7 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final ReservaClient reservaClient;
     private final JwtService jwtService;
 
     // OBTENER INFORMACION SIMPLIFICADA DE LOS CLIENTE
@@ -298,6 +300,14 @@ public class UsuarioService {
         if(!usuarioRepository.existsById(idEmpleado)){
             throw new NotFoundException("El usuario no existe");
         }
+
+        Usuario usuario = usuarioRepository.findById(idEmpleado)
+                        .orElseThrow(()-> new NotFoundException("Usuario no encontrado"));
+
+        if(usuario.getRol().equals(Rol.NUTRICIONISTA)){
+            reservaClient.eliminarReserva(idEmpleado);
+        }
+
         usuarioRepository.deleteById(idEmpleado);
     }
 

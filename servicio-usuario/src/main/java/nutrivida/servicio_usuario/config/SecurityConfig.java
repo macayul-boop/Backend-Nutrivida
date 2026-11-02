@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_usuario.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/nutricionistaSimplificado/**").hasAnyAuthority("SECRETARIO", "CLIENTE")
                         .requestMatchers("/api/usuarios/empleados/**").hasAnyAuthority("ADMINISTRADOR")
                         .requestMatchers("/api/usuarios/verificar/").hasAnyAuthority("SECRETARIO", "NUTRICIONISTA", "CLIENTE")
+                        .requestMatchers(HttpMethod.DELETE, "/api/usuarios/").hasAuthority("ADMINISTRADOR")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

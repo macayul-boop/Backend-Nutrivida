@@ -91,4 +91,9 @@ public class ReservaController {
         return ResponseEntity.ok(horas);
     }
 
+    @DeleteMapping("/reservas/{idUsuario}")
+    public ResponseEntity<Void> eliminarReserva(@PathVariable Integer idUsuario){
+        reservaService.eliminarReservasPorUnNutricionista(idUsuario);
+        return ResponseEntity.noContent().build();
+    }
 }

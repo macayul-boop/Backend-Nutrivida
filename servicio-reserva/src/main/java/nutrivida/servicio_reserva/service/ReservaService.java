@@ -345,4 +345,11 @@ public class ReservaService {
 
     }
 
+    // ELIMINAR RESERVA POR EL NUTRICIONISTA
+    public void eliminarReservasPorUnNutricionista(Integer idNutricionista){
+        if(reservaRespository.existsReservasByIdNutricionista(idNutricionista)) {
+            reservaRespository.deleteByIdNutricionista(idNutricionista);
+        }
+    }
+
 }

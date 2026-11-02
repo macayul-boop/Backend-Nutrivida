@@ -4,6 +4,7 @@ import nutrivida.servicio_reserva.model.EstadoReserva;
 import nutrivida.servicio_reserva.model.Reserva;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,4 +32,9 @@ public interface ReservaRespository extends JpaRepository<Reserva, Integer> {
     List<Reserva> findAllByIdNutricionistaAndFecha(Integer idNutricionista, LocalDate fecha);
 
     List<Reserva> findAllByIdNutricionistaAndFechaAndEstado(Integer idNutricionista, LocalDate fecha, EstadoReserva estado);
+
+    @Transactional
+    Long deleteByIdNutricionista(Integer idNutricionista);
+
+    boolean existsReservasByIdNutricionista(Integer idNutricionista);
 }
