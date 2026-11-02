@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -284,6 +286,63 @@ public class ReservaService {
         return response;
     }
 
+    // GENERAR HORAS DISPONIBLES
+    public List<LocalTime> generarHoras(HoraRequestDto request){
 
+        // 1. Obtener la información del nutricionista
+        NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(request.getIdNutricionista());
+
+        // 2. Obtener el día de la semana en español
+        String nombreDia = request.getFecha().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("es-ES"));
+
+        // 3. Filtrar el horario para el día seleccionado
+        HorarioNutricionistaDto horarioDia = nutricionista.getHorarioNutricionista().stream()
+                .filter(h -> h.getDiaSemana().equalsIgnoreCase(nombreDia))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("El nutricionista no atiende el día " + nombreDia));
+
+        // 4. Obtener el servicio y su duración
+        Servicio servicio = servicioRepository.findById(request.getIdServicio())
+                .orElseThrow(() -> new NotFoundException("Servicio no encontrado"));
+
+        int duracionMinutos = servicio.getDuracionMinutos();
+
+        // 5. Consultar solo las reservas en estado "RESERVADO"
+        List<Reserva> reservasOcupadas = reservaRespository.findAllByIdNutricionistaAndFechaAndEstado(
+                request.getIdNutricionista(),
+                request.getFecha(),
+                EstadoReserva.RESERVADA
+        );
+
+        // 6. Generar los bloques de horarios disponibles
+        List<LocalTime> horasDisponibles = new ArrayList<>();
+
+        LocalTime horaActual = horarioDia.getHoraEntrada();
+        LocalTime horaFinJornada = horarioDia.getHoraSalida();
+
+        while (!horaActual.plusMinutes(duracionMinutos).isAfter(horaFinJornada)) {
+            LocalTime horaFinBloque = horaActual.plusMinutes(duracionMinutos);
+
+            final LocalTime inicio = horaActual;
+            final LocalTime fin = horaFinBloque;
+
+            // Comprobar si traslapa con alguna reserva ya existente
+            boolean estaOcupado = reservasOcupadas.stream().anyMatch(reserva ->
+                    inicio.isBefore(reserva.getHoraTermino()) && fin.isAfter(reserva.getHoraInicio())
+            );
+
+            if (!estaOcupado) {
+                horasDisponibles.add(horaActual);
+            }
+
+            System.out.println(horaActual);
+
+            // Avanzar el reloj
+            horaActual = horaActual.plusMinutes(duracionMinutos);
+        }
+
+        return horasDisponibles;
+
+    }
 
 }

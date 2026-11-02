@@ -1,5 +1,6 @@
 package nutrivida.servicio_reserva.repository;
 
+import nutrivida.servicio_reserva.model.EstadoReserva;
 import nutrivida.servicio_reserva.model.Reserva;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,6 @@ public interface ReservaRespository extends JpaRepository<Reserva, Integer> {
     List<Reserva> findAllByIdCliente(Integer idCliente);
 
     List<Reserva> findAllByIdNutricionistaAndFecha(Integer idNutricionista, LocalDate fecha);
+
+    List<Reserva> findAllByIdNutricionistaAndFechaAndEstado(Integer idNutricionista, LocalDate fecha, EstadoReserva estado);
 }

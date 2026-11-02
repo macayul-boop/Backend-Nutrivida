@@ -3,6 +3,7 @@ package nutrivida.servicio_reserva.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nutrivida.servicio_reserva.dto.EditarReservaDto;
+import nutrivida.servicio_reserva.dto.HoraRequestDto;
 import nutrivida.servicio_reserva.dto.ReservaRequest;
 import nutrivida.servicio_reserva.dto.ReservaResponse;
 import nutrivida.servicio_reserva.service.ReservaService;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -76,6 +78,17 @@ public class ReservaController {
     ){
         List<ReservaResponse> response = reservaService.leerReservasPorFechaDeUnNutricionista(idNutricionista, fecha);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/horas-disponibles")
+    public ResponseEntity<List<LocalTime>> obtenerHorasDisponibles(
+            @RequestParam Integer idNutricionista,
+            @RequestParam Integer idServicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
+    ){
+        HoraRequestDto request = new HoraRequestDto(idServicio, idNutricionista, fecha);
+        List<LocalTime> horas = reservaService.generarHoras(request);
+        return ResponseEntity.ok(horas);
     }
 
 }
