@@ -8,4 +8,5 @@ import lombok.Data;
 public class ClienteSimplificadoResponse {
     private Integer id;
     private String nombre;
+    private String rutCliente;
 }
