@@ -21,6 +21,4 @@ public class ReservaResponse {
     private ClienteSimplificadoDto datosClientes;
     private NutricionistaSimplificadoDto datosNutricionista;
     private String nombreServicio;
-
-    // Agregar infromacion del servicio, nutricionista y cliente
 }

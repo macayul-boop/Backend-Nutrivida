@@ -2,10 +2,13 @@ package nutrivida.servicio_usuario.WebClient;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import nutrivida.servicio_usuario.dto.ReservaResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +39,17 @@ public class ReservaClient {
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Void.class)
+                .block();
+    }
+
+    public List<ReservaResponse> obtenerTodasReservasDeUnPaciente(Integer idCliente){
+        String token = obtenerToken();
+
+        return webClient.get()
+                .uri("http://localhost:8082/api/reservas/secretarios/{idCliente}", idCliente)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToMono(List.class)
                 .block();
     }
 

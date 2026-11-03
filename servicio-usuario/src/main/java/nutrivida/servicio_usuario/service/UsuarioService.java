@@ -319,4 +319,14 @@ public class UsuarioService {
         return false;
     }
 
+    // LEER UN USUARIO POR SU RUT PARA OBTENER RESERVAS
+    public List<ReservaResponse> listarTodasReservasDeUnCLientePorRut(String rutCliente){
+        Usuario usuario = usuarioRepository.findByRut(rutCliente)
+                .orElseThrow(()-> new NotFoundException("Usuario no encontrado"));
+
+        List<ReservaResponse> reservas = reservaClient.obtenerTodasReservasDeUnPaciente(usuario.getId());
+        return reservas;
+    }
+
+
 }

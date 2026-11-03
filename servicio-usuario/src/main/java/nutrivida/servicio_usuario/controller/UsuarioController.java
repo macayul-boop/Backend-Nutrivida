@@ -89,5 +89,12 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
+    @GetMapping("/reservas/secretarios/clientes")
+    public ResponseEntity<List<ReservaResponse>> listarReservasClientes(
+            @RequestParam String rutCliente
+    ){
+        List<ReservaResponse> response = usuarioService.listarTodasReservasDeUnCLientePorRut(rutCliente);
+        return ResponseEntity.ok(response);
+    }
+    
 }
