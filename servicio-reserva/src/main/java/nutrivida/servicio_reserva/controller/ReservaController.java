@@ -96,4 +96,16 @@ public class ReservaController {
         reservaService.eliminarReservasPorUnNutricionista(idUsuario);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/reservas/secretarios")
+    public ResponseEntity<List<ReservaResponse>> listarTodasReservas(){
+        List<ReservaResponse> response = reservaService.listarTodasReservasSecretario();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/reservas/secretarios/{idCliente}")
+    public ResponseEntity<List<ReservaResponse>> listarTodoasReservasDeUnPaciente(@PathVariable Integer idCliente){
+        List<ReservaResponse> response = reservaService.listarTodasReservasDeUnPacienteSecretario(idCliente);
+        return ResponseEntity.ok(response);
+    }
 }

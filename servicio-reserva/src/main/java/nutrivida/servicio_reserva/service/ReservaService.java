@@ -352,4 +352,66 @@ public class ReservaService {
         }
     }
 
+    // LISTAR TODAS LAS RESERVAS PARA EL SECRETARIO
+    public List<ReservaResponse> listarTodasReservasSecretario(){
+        List<Reserva> lista = reservaRespository.findAll();
+
+        List<ReservaResponse> response = new ArrayList<>();
+
+        for(Reserva r : lista){
+
+            ClienteSimplificadoDto cliente = usuarioCliente.leerUnClienteSimplificado(r.getIdCliente());
+            NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(r.getIdNutricionista());
+
+            ReservaResponse reservaTransformada = ReservaResponse.builder()
+                    .id(r.getId())
+                    .idNutricionista(r.getIdNutricionista())
+                    .idCliente(r.getIdCliente())
+                    .idServicio(r.getServicio().getId())
+                    .estado(r.getEstado())
+                    .fecha(r.getFecha())
+                    .horaInicio(r.getHoraInicio())
+                    .horaTermino(r.getHoraTermino())
+                    .datosNutricionista(nutricionista)
+                    .datosClientes(cliente)
+                    .nombreServicio(r.getServicio().getNombre())
+                    .build();
+
+            response.add(reservaTransformada);
+        }
+
+        return response;
+    }
+
+    // LISTAR TODAS LAS RESERVAS DE UN PACIENTE PARA EL SECRETARIO
+    public List<ReservaResponse> listarTodasReservasDeUnPacienteSecretario(Integer idCliente){
+        List<Reserva> lista = reservaRespository.findAllByIdCliente(idCliente);
+
+        List<ReservaResponse> response = new ArrayList<>();
+
+        for(Reserva r : lista){
+
+            ClienteSimplificadoDto cliente = usuarioCliente.leerUnClienteSimplificado(r.getIdCliente());
+            NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(r.getIdNutricionista());
+
+            ReservaResponse reservaTransformada = ReservaResponse.builder()
+                    .id(r.getId())
+                    .idNutricionista(r.getIdNutricionista())
+                    .idCliente(r.getIdCliente())
+                    .idServicio(r.getServicio().getId())
+                    .estado(r.getEstado())
+                    .fecha(r.getFecha())
+                    .horaInicio(r.getHoraInicio())
+                    .horaTermino(r.getHoraTermino())
+                    .datosNutricionista(nutricionista)
+                    .datosClientes(cliente)
+                    .nombreServicio(r.getServicio().getNombre())
+                    .build();
+
+            response.add(reservaTransformada);
+        }
+
+        return response;
+    }
+
 }
