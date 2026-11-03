@@ -59,13 +59,13 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/auth/register")
+    @PostMapping("/usuarios/auth/register")
     public ResponseEntity<TokenResponse> craerCliente(@Valid @RequestBody UsuarioRequest request){
         TokenResponse response = usuarioService.crearCliente(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/auth/login")
+    @PostMapping("/usuarios/auth/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request){
         TokenResponse response = usuarioService.login(request);
         return ResponseEntity.ok(response);
@@ -89,7 +89,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/reservas/secretarios/clientes")
+    @GetMapping("/usuarios/reservas/secretarios/clientes")
     public ResponseEntity<List<ReservaResponse>> listarReservasClientes(
             @RequestParam String rutCliente
     ){

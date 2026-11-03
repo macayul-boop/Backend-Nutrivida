@@ -20,6 +20,8 @@
     <module>servicio-usuario</module>
     <module>servicio-reserva</module>
     <module>servicio-datos-clinicos</module>
+    <module>servicio-eureka</module>
+    <module>servicio-api-gateway</module>
   </modules>
 
   <properties>

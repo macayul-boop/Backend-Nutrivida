@@ -1,0 +1,13 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: servicio-eureka
+
+eureka:
+  client:
+    register-with-eureka: false # Le dice: "Tú eres el servidor, no intentes registrarte a ti mismo"
+    fetch-registry: false       # Le dice: "No necesitas ir a buscar la lista de nadie más, tú eres el dueño de la lista"
+  server:
+    enable-self-preservation: false # Esto evita que Eureka se queje en local si no hay servicios conectados
