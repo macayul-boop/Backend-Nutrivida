@@ -19,6 +19,7 @@
   <modules>
     <module>servicio-usuario</module>
     <module>servicio-reserva</module>
+    <module>servicio-datos-clinicos</module>
   </modules>
 
   <properties>
