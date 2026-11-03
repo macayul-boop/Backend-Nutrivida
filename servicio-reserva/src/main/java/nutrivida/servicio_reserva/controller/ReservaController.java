@@ -80,7 +80,7 @@ public class ReservaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/horas-disponibles")
+    @GetMapping("/reservas/horas-disponibles")
     public ResponseEntity<List<LocalTime>> obtenerHorasDisponibles(
             @RequestParam Integer idNutricionista,
             @RequestParam Integer idServicio,

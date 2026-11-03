@@ -6,13 +6,36 @@ spring:
     name: servicio-api-gateway
   cloud:
     gateway:
-      routers:
-        - id: servicio-usuario
-          uri: lb://servicio-usuario
-          predicates:
-            - Path=/api/usuarios/**
+      server:
+        webflux:
+          routes:
+            - id: servicio-usuario
+              uri: lb://servicio-usuario
+              predicates:
+                - Path=/api/usuarios/**
+            - id: servicio-reserva
+              uri: lb://servicio-reserva
+              predicates:
+                - Path=/api/servicios/**, /api/reservas/**
 
-
+          globalcors:
+            add-to-simple-url-handler-mapping: true
+            cors-configurations:
+              '[/**]':
+                allowedOrigins:
+                  - "http://localhost:3000"
+                  - "http://localhost:5173"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - PATCH
+                  - DELETE
+                  - PATCH
+                  - OPTIONS
+                allowedHeaders: "*"
+                allowCredentials: true
+                maxAge: 3600
 
 eureka:
   client:

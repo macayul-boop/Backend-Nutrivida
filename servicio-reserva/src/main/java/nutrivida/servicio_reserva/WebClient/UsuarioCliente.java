@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class UsuarioCliente {
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     private String obtenerToken() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -35,8 +35,8 @@ public class UsuarioCliente {
 
         String token = obtenerToken();
 
-        return webClient.get()
-                .uri("http://localhost:8081/api/usuarios/verificar/{idUsuario}", idUsuario)
+        return webClientBuilder.build().get()
+                .uri("http://servicio-usuario/api/usuarios/verificar/{idUsuario}", idUsuario)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Boolean.class)
@@ -48,8 +48,8 @@ public class UsuarioCliente {
 
         String token = obtenerToken();
 
-        return webClient.get()
-                .uri("http://localhost:8081/api/usuarios/clienteSimplificado/{idCliente}", idCliente)
+        return webClientBuilder.build().get()
+                .uri("http://servicio-usuario/api/usuarios/clienteSimplificado/{idCliente}", idCliente)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(ClienteSimplificadoDto.class)
@@ -61,8 +61,8 @@ public class UsuarioCliente {
 
         String token = obtenerToken();
 
-        return webClient.get()
-                .uri("http://localhost:8081/api/usuarios/nutricionistaSimplificado/{idEmpleado}", idEmpleado)
+        return webClientBuilder.build().get()
+                .uri("http://servicio-usuario/api/usuarios/nutricionistaSimplificado/{idEmpleado}", idEmpleado)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(NutricionistaSimplificadoDto.class)

@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservaClient {
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     private String obtenerToken() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -34,8 +34,8 @@ public class ReservaClient {
     public Void eliminarReserva(Integer idUsuario){
         String token = obtenerToken();
 
-        return webClient.delete()
-                .uri("http://localhost:8082/api/reservas/{idUsuario}", idUsuario)
+        return webClientBuilder.build().delete()
+                .uri("http://servicio-reserva/api/reservas/{idUsuario}", idUsuario)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Void.class)
@@ -45,8 +45,8 @@ public class ReservaClient {
     public List<ReservaResponse> obtenerTodasReservasDeUnPaciente(Integer idCliente){
         String token = obtenerToken();
 
-        return webClient.get()
-                .uri("http://localhost:8082/api/reservas/secretarios/{idCliente}", idCliente)
+        return webClientBuilder.build().get()
+                .uri("http://servicio-reserva/api/reservas/secretarios/{idCliente}", idCliente)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(List.class)

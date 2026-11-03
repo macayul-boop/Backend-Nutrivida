@@ -29,7 +29,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/usuarios/auth/**").permitAll()
                         .requestMatchers("/api/usuarios/clienteSimplificado/**").hasAnyAuthority("SECRETARIO", "CLIENTE")
                         .requestMatchers("/api/usuarios/nutricionistaSimplificado/**").hasAnyAuthority("SECRETARIO", "CLIENTE")
                         .requestMatchers("/api/usuarios/empleados/**").hasAnyAuthority("ADMINISTRADOR")
