@@ -36,7 +36,7 @@ public class ServicioController {
     }
 
     @PutMapping("/servicios/{idServicio}")
-    public ResponseEntity<ServicioResponse> editarServicio(@Valid @PathVariable Integer idServicio, @RequestBody ServicioRequest request){
+    public ResponseEntity<ServicioResponse> editarServicio(@PathVariable Integer idServicio, @Valid  @RequestBody ServicioRequest request){
         ServicioResponse response = servicioService.editarServicio(idServicio, request);
         return ResponseEntity.ok(response);
     }
