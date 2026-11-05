@@ -30,6 +30,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/api/usuarios/auth/**").permitAll()
+                        .requestMatchers("/api/usuarios/pacientes", "/api/usuarios/pacientes/**")
+                        .hasAuthority("NUTRICIONISTA")
                         .requestMatchers("/api/usuarios/clienteSimplificado/**").hasAnyAuthority("SECRETARIO", "CLIENTE")
                         .requestMatchers("/api/usuarios/nutricionistaSimplificado/**").hasAnyAuthority("SECRETARIO", "CLIENTE")
                         .requestMatchers("/api/usuarios/empleados/**").hasAnyAuthority("ADMINISTRADOR")
