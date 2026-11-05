@@ -1,9 +1,23 @@
 server:
-  port: 8083
+  port: ${PORT:8083}
 
 spring:
   application:
     name: servicio-datos-clinicos
+
+  datasource:
+    url: jdbc:h2:mem:datosclinicos;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    enabled: true
 
 eureka:
   client:
