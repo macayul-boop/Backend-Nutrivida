@@ -24,6 +24,35 @@ public class UsuarioService {
     private final ReservaClient reservaClient;
     private final JwtService jwtService;
 
+        // BUSCAR PACIENTE POR RUT
+    public PacienteResponse buscarPacientePorRut(String rut){
+        Usuario paciente = usuarioRepository.findByRut(rut.trim())
+                .filter(usuario -> usuario.getRol() == Rol.CLIENTE)
+                .orElseThrow(() -> new NotFoundException("Paciente no encontrado"));
+
+        return convertirPaciente(paciente);
+    }
+
+    // BUSCAR PACIENTE POR ID
+    public PacienteResponse buscarPacientePorId(Integer idCliente){
+        Usuario paciente = usuarioRepository.findById(idCliente)
+                .filter(usuario -> usuario.getRol() == Rol.CLIENTE)
+                .orElseThrow(() -> new NotFoundException("Paciente no encontrado"));
+
+        return convertirPaciente(paciente);
+    }
+
+    private PacienteResponse convertirPaciente(Usuario paciente){
+        return PacienteResponse.builder()
+                .id(paciente.getId())
+                .rut(paciente.getRut())
+                .nombre(paciente.getNombre())
+                .apellidos(paciente.getApellidos())
+                .telefono(paciente.getTelefono())
+                .email(paciente.getEmail())
+                .build();
+    }
+
     // OBTENER INFORMACION SIMPLIFICADA DE LOS CLIENTE
     public List<ClienteSimplificadoResponse> leerTodosClienteSimplificado(){
         List<Usuario> usuarios = usuarioRepository.findByRolIn(List.of(Rol.CLIENTE));

@@ -7,6 +7,9 @@ import nutrivida.servicio_usuario.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -16,6 +19,18 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    
+    @GetMapping("/usuarios/pacientes")
+    public ResponseEntity<PacienteResponse> buscarPacientePorRut(@RequestParam @NotBlank @Size(max = 40) String rut){
+        PacienteResponse response = usuarioService.buscarPacientePorRut(rut);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/usuarios/pacientes/{idCliente}")
+    public ResponseEntity<PacienteResponse> buscarPacientePorId(@PathVariable @Positive Integer idCliente){
+        PacienteResponse response = usuarioService.buscarPacientePorId(idCliente);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping
     public ResponseEntity<List<UsuarioPrueba>> leerTodos(){
