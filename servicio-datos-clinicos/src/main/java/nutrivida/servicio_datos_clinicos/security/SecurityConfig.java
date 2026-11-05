@@ -1,4 +1,4 @@
-package nutrivida.servicio_datos_clinicos.config;
+package nutrivida.servicio_datos_clinicos.security;
 
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
