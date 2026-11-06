@@ -12,6 +12,7 @@ import nutrivida.servicio_reserva.repository.ReservaRespository;
 import nutrivida.servicio_reserva.repository.ServicioRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
@@ -293,11 +294,11 @@ public class ReservaService {
         NutricionistaSimplificadoDto nutricionista = usuarioCliente.leerUnNutricionistaSimplificado(request.getIdNutricionista());
 
         // 2. Obtener el día de la semana en español
-        String nombreDia = request.getFecha().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("es-ES"));
+        String nombreDia = quitarTildes(request.getFecha().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("es-ES")));
 
         // 3. Filtrar el horario para el día seleccionado
         HorarioNutricionistaDto horarioDia = nutricionista.getHorarioNutricionista().stream()
-                .filter(h -> h.getDiaSemana().equalsIgnoreCase(nombreDia))
+                .filter(h -> quitarTildes(h.getDiaSemana()).equalsIgnoreCase(nombreDia))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("El nutricionista no atiende el día " + nombreDia));
 
@@ -414,4 +415,8 @@ public class ReservaService {
         return response;
     }
 
+    private String quitarTildes(String texto) {
+        return Normalizer.normalize(texto, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+    }
 }
