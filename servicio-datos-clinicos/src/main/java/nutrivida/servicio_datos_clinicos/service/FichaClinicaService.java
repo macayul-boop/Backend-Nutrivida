@@ -22,6 +22,16 @@ public class FichaClinicaService {
     private final UsuarioCliente usuarioCliente;
     private final FichaClinicaRepository fichaClinicaRepository;
     private final InformeRepository informeRepository;
+ 
+    // BUSCAR FICHA POR EL RUT DEL PACIENTE   
+    @Transactional(readOnly = true)
+    public List<InformeResponse> listarMisInformes(Integer idCliente){
+        return informeRepository
+                .findAllByFichaClinica_IdClienteOrderByFechaDescIdDesc(idCliente)
+                .stream()
+                .map(this::convertirInforme)
+                .toList();
+    }
 
     // BUSCAR FICHA POR EL RUT DEL PACIENTE
     @Transactional(readOnly = true)
@@ -41,6 +51,7 @@ public class FichaClinicaService {
                 .informes(listaInformes)
                 .build();
     }
+    
 
     // ACTUALIZAR EL PLAN DE ALIMENTACION
     @Transactional
@@ -125,6 +136,16 @@ public class FichaClinicaService {
                 .talla(informe.getTalla())
                 .circunferenciaCintura(informe.getCircunferenciaCintura())
                 .descripcion(informe.getDescripcion())
+                .build();
+    }
+    @Transactional(readOnly = true)
+    public PlanAlimentacionResponse leerMiPlan(Integer idCliente){
+        String plan = fichaClinicaRepository.findByIdCliente(idCliente)
+                .map(FichaClinica::getPlanAlimentacion)
+                .orElse("");
+
+        return PlanAlimentacionResponse.builder()
+                .planAlimentacion(plan)
                 .build();
     }
 }
