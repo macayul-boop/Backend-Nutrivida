@@ -15,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.net.URI;
+import nutrivida.servicio_datos_clinicos.dto.PlanAlimentacionResponse;
 
 @RestController
 @RequestMapping("/api")
@@ -75,5 +76,11 @@ public class FichaClinicaController {
             @AuthenticationPrincipal Integer idCliente
     ){
         return ResponseEntity.ok(fichaClinicaService.listarMisInformes(idCliente));
+    }
+    @GetMapping("/fichas-clinicas/mi-plan")
+    public ResponseEntity<PlanAlimentacionResponse> leerMiPlan(
+            @AuthenticationPrincipal Integer idCliente
+    ){
+        return ResponseEntity.ok(fichaClinicaService.leerMiPlan(idCliente));
     }
 }

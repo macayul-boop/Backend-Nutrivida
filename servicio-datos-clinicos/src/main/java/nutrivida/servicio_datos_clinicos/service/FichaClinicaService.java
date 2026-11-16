@@ -138,4 +138,14 @@ public class FichaClinicaService {
                 .descripcion(informe.getDescripcion())
                 .build();
     }
+    @Transactional(readOnly = true)
+    public PlanAlimentacionResponse leerMiPlan(Integer idCliente){
+        String plan = fichaClinicaRepository.findByIdCliente(idCliente)
+                .map(FichaClinica::getPlanAlimentacion)
+                .orElse("");
+
+        return PlanAlimentacionResponse.builder()
+                .planAlimentacion(plan)
+                .build();
+    }
 }
