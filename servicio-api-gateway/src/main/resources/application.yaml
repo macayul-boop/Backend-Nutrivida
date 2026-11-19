@@ -22,6 +22,29 @@ spring:
               predicates:
                 - Path=/api/fichas-clinicas, /api/fichas-clinicas/**
 
+            # --- RUTAS NUEVAS PARA LA DOCUMENTACIÓN (SWAGGER) ---
+
+            - id: usuario-docs
+              uri: lb://servicio-usuario
+              predicates:
+                - Path=/v3/api-docs/usuario
+              filters:
+                - RewritePath=/v3/api-docs/usuario, /v3/api-docs
+
+            - id: reserva-docs
+              uri: lb://servicio-reserva
+              predicates:
+                - Path=/v3/api-docs/reserva
+              filters:
+                - RewritePath=/v3/api-docs/reserva, /v3/api-docs
+
+            - id: datos-clinicos-docs
+              uri: lb://servicio-datos-clinicos
+              predicates:
+                - Path=/v3/api-docs/datos-clinicos
+              filters:
+                - RewritePath=/v3/api-docs/datos-clinicos, /v3/api-docs
+
           globalcors:
             add-to-simple-url-handler-mapping: true
             cors-configurations:
@@ -29,6 +52,7 @@ spring:
                 allowedOrigins:
                   - "http://localhost:3000"
                   - "http://localhost:5173"
+                  - "http://nutrivida-frontend.s3-website-us-east-1.amazonaws.com"
                   - "http://nutrivida-frontend.s3-website-us-east-1.amazonaws.com"
                 allowedMethods:
                   - GET
@@ -49,3 +73,14 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     prefer-ip-address: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: Microservicio usuario
+        url: /v3/api-docs/usuario
+      - name: Microservicio reserva
+        url: /v3/api-docs/reserva
+      - name: Microservicio datos clinicos
+        url: /v3/api-docs/datos-clinicos
